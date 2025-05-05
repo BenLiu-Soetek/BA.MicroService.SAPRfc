@@ -1,0 +1,6 @@
+@BA.MicroService.SAPRfc_HostAddress = http://localhost:5118
+
+GET {{BA.MicroService.SAPRfc_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
