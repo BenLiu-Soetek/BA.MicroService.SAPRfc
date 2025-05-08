@@ -1,8 +1,10 @@
 ﻿using BA.MicroService.SAPRfc.Models;
+using Microsoft.Extensions.Configuration;
 using SAP.Middleware.Connector;
 using SapRfcMicroservice.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -11,9 +13,14 @@ namespace SapRfcMicroservice
 {
     public class SapService
     {
+        private readonly IConfiguration _configuration;
         private readonly AesCryptoService _cryptoService;
 
-        public SapService(AesCryptoService cryptoService) => _cryptoService = cryptoService;
+        public SapService(AesCryptoService cryptoService, IConfiguration configuration)
+        {
+            _cryptoService = cryptoService;
+            _configuration = configuration;
+        }
 
         public async Task<RfcResult> CallRfcAsync(SapRfcRequest request)
         {
@@ -44,7 +51,23 @@ namespace SapRfcMicroservice
                         func.SetValue(param.Key, value);
                     }
 
-                func.Invoke(dest);
+                // 執行 SAP 呼叫，加上 timeout 控制
+                var timeoutMs = request.TimeOut ?? _configuration.GetSection("RFCTimeOut").Get<int>();
+                using var cts = new CancellationTokenSource(timeoutMs);
+
+                var invokeTask = Task.Run(() =>
+                {
+                    func.Invoke(dest);
+                }, cts.Token);
+
+                if (!invokeTask.Wait((int)timeoutMs))
+                {
+                    cts.Cancel();
+                    throw new TimeoutException("RFC execution timed out.");
+                }
+
+                // 若 invoke 發生例外
+                await invokeTask;
 
                 var result = new RfcResult { Success = true };
 
@@ -73,6 +96,14 @@ namespace SapRfcMicroservice
                 }
 
                 return await Task.FromResult(result);
+            }
+            catch (TimeoutException ex)
+            {
+                return new RfcResult
+                {
+                    Success = false,
+                    Exports = new Dictionary<string, dynamic> { { "error", $"Timeout: {ex.Message}" } }
+                };
             }
             catch (RfcAbapException ex)
             {

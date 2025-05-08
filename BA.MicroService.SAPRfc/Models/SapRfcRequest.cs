@@ -6,6 +6,7 @@ namespace SapRfcMicroservice.Models
     {
         public string EncryptedConnection { get; set; } = string.Empty;
         public string FunctionName { get; set; } = string.Empty;
+        public int? TimeOut { get; set; } = null;
         public Dictionary<string, object> Parameters { get; set; } = new();
     }
 
@@ -23,6 +24,6 @@ namespace SapRfcMicroservice.Models
     {
         public bool Success { get; set; }
         public Dictionary<string, dynamic> Exports { get; set; } = new();
-        public Dictionary<string, List<Dictionary<string, dynamic>>> Tables { get; set; } = new(); 
+        public Dictionary<string, List<Dictionary<string, dynamic>>> Tables { get; set; } = new();
     }
 }
