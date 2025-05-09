@@ -9,6 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Services\SapService.cs~RF55fba2a3.TMP" />
+    <None Remove="Services\SapService.cs~RF56b109a9.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="SAPConnectorLibrary" Version="1.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
