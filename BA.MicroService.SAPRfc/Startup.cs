@@ -9,11 +9,11 @@ namespace SapRfcMicroservice
 {
     public class Startup
     {
-        private readonly string StaticToken;
+        //private readonly string StaticToken;
 
         public Startup()
         {
-            StaticToken = Environment.GetEnvironmentVariable("STATIC_API_TOKEN") ?? "Bearer fallback-token";
+            //StaticToken = Environment.GetEnvironmentVariable("STATIC_API_TOKEN") ?? "Bearer fallback-token";
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -65,12 +65,12 @@ namespace SapRfcMicroservice
 
             app.Use(async (context, next) =>
             {
-                if (!context.Request.Headers.TryGetValue("Authorization", out var token) || token != StaticToken)
-                {
-                    context.Response.StatusCode = 401;
-                    await context.Response.WriteAsync("Unauthorized");
-                    return;
-                }
+                //if (!context.Request.Headers.TryGetValue("Authorization", out var token) || token != StaticToken)
+                //{
+                //    context.Response.StatusCode = 401;
+                //    await context.Response.WriteAsync("Unauthorized");
+                //    return;
+                //}
                 await next();
             });
 

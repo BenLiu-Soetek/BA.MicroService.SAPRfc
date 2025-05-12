@@ -18,6 +18,7 @@ namespace SapRfcMicroservice.Models
         public string User { get; set; }
         public string Password { get; set; }
         public string Lang { get; set; }
+        public string SysId { get; set; }
     }
 
     public class RfcResult

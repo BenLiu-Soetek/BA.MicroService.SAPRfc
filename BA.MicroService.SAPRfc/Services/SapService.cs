@@ -355,6 +355,7 @@ namespace SapRfcMicroservice
                 { RfcConfigParameters.User, info.User },
                 { RfcConfigParameters.Password, info.Password },
                 { RfcConfigParameters.Language, info.Lang },
+                { RfcConfigParameters.SystemID, info.SysId}
             };
             return RfcDestinationManager.GetDestination(parms);
         }
